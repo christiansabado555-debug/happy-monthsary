@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Monthsary, My Love 💜</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- AOS Library for scroll animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f3e5f5; /* Soft pastel purple */
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            color: #4a148c;
+            width: 100vw;
+        }
+
+        /* --- SCREEN 1: QUESTION SCREEN --- */
+        #question-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(106, 27, 154, 0.15);
+            max-width: 400px;
+            width: 100%;
+            border: 2px solid #e1bee7;
+        }
+
+        .main-title {
+            font-size: 1.5rem;
+            color: #7b1fa2;
+            margin-bottom: 20px;
+        }
+
+        .image-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px auto;
+        }
+
+        .gif {
+            height: 100%;
+            width: 100%;
+            cursor: zoom-in;
+            object-fit: contain;
+        }
+
+        .gif:active {
+            margin: 15px 0;
+            transform: scale3d(1.3, 1.3, 1.3);
+        }
+
+        #question {
+            font-size: 1.1rem;
+            color: #4a148c;
+            margin-bottom: 20px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        #yes-btn {
+            background-color: #8e24aa;
+            color: white;
+            box-shadow: 0 4px 12px rgba(142, 36, 170, 0.3);
+        }
+
+        #yes-btn:hover {
+            background-color: #6a1b9a;
+        }
+
+        #no-btn {
+            background-color: #e1bee7;
+            color: #4a148c;
+        }
+
+        /* --- SCREEN 2: FIXED ENVELOPE (SOBRE) SCREEN --- */
+        #envelope-screen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            background: linear-gradient(135deg, #d1c4e9, #f3e5f5);
+            padding: 20px;
+        }
+
+        .envelope-wrapper {
+            cursor: pointer;
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 0 auto;
+            animation: bounce 2s infinite;
+        }
+
+        /* The hidden letter inside that slides out */
+        .letter-inside {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            width: 260px;
+            height: 160px;
+            background: white;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.4rem;
+            color: #7b1fa2;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.6s ease;
+            z-index: 1; /* Sits behind the back pocket and flap initially */
+        }
+
+        /* Back pocket of the envelope */
+        .envelope-back {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #7b1fa2;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 25px rgba(74, 20, 140, 0.3);
+            z-index: 2;
+        }
+
+        /* Top triangle flap */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #512da8;
+            transform-origin: top;
+            transition: transform 0.6s ease;
+            z-index: 4; /* Sits on top of everything */
+        }
+
+        /* Animation states when clicked */
+        .envelope-wrapper.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-wrapper.open .letter-inside {
+            transform: translateY(-110px); /* Slides out smoothly */
+            z-index: 3;
+        }
+
+        .envelope-text {
+            margin-top: 50px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #4a148c;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- SCREEN 3: CARD & SINGLE-PHOTO SCROLL --- */
+        #card-screen {
+            display: none;
+            padding: 30px 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .section-box {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(106, 27, 154, 0.1);
+            margin-bottom: 35px;
+            text-align: center;
+            border: 1px solid #e1bee7;
+            width: 100%;
+        }
+
+        h2.script-font {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: #7b1fa2;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: #5e35b1;
+        }
+
+        .single-photo-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(106, 27, 154, 0.12);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid #e1bee7;
+        }
+
+        .single-photo-card img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(106, 27, 154, 0.15);
+            border: 2px solid #f3e5f5;
+        }
+
+        .photo-caption {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #7b1fa2;
+        }
+
+        .floating-hearts {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 15px 0;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BACKGROUND AUDIO (Dionela - Musika) -->
+    <audio id="bg-music" loop>
+        <source src="musika.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- STEP 1: QUESTION SCREEN -->
+    <div id="question-screen">
+        <div class="container">
+            <h1 class="main-title">Happy Monthsary, My Love! 💜</h1>
+            <div class="image-container">
+                <img id="gif" class="gif" src="21.jpg" alt="Cute GIF">
+            </div>
+            <h2 id="question">Will you open your monthsary surprise?</h2>
+            <div class="btn-group">
+                <button id="yes-btn" class="btn">Yes 💜</button>
+                <button id="no-btn" class="btn">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: FIXED ENVELOPE (SOBRE) SCREEN -->
+    <div id="envelope-screen">
+        <div class="envelope-wrapper" id="envelope-wrapper" onclick="openEnvelope()">
+            <div class="letter-inside">For my Asawa ko & Baby 💌</div>
+            <div class="envelope-back"></div>
+            <div class="envelope-flap"></div>
+        </div>
+        <div class="envelope-text">Tap the envelope to open! ✨</div>
+    </div>
+
+    <!-- STEP 3: MESSAGE CARD & SINGLE-PHOTO SCROLL GALLERY -->
+    <div id="card-screen">
+        
+        <!-- Layer 1: First Message Section -->
+        <div class="section-box" data-aos="fade-up">
+            <h2 class="script-font">My Dearest Asawa ko,</h2>
+            <p>
+                Hello My Love, Happy monthsary mahal ko 🥰. Akalain mo yun umabot tayo ng ganto mahal ko. 5months and more months to come asawa ko away bati tampuhan kulitan misunderstanding iyakan pero amg ending sa isat isa parin uuwi. Sobrang swerte ko talaga sayo mahal ko kung hindi sayo siguro matagal nakong huminto sa lahat at matagal nakong wala, kung hindi dahil sayo mahal natuto akong umasa ulit lumaban ulit at dahil sayo mahal ko natuto ako at nalaman ko na meron parin palang nag mamahal at umaasa sakin. maraming maraming salamat mahal ko diko alam paano moko minahal at ano yung dahilan bakit ako yung tinanggap moko ehh HAHAHAHAHAHA pero mahal sobrang nag papa-salamat ako kasi minahal moko ng sobra na kahit ilang beses na kita masaktan nagkaka ayos at sa isat isa parin ang hinahanap at kahit isinakripisyo mo sarili mong circle of friends para lang di ako ma saktan di ako mag overthink maraming salamat mahal ko, dahil sayo yung pangarap ko noon unti unti nang natutupad at salamat mahal ko kasi ikaw yung tumutupad nito mahal ko 💜
+            </p>
+            <br>
+            <p>I Love you so much asawa ko, mahal na mahal na mahal na mahal na mahal na mahal na mahal na mahal na mahal na mahal na mahal na mahal na mahal ko po kayo ng sobra ni baby at gagawin ko ang lahat para sa inyo mahal ko, hindi sapat ang salita lang mahal kaya pangako makaka asa kapo sakin asawa ko makaka asa ka sakin na lahat ng pangako ko sayo matutupad lahat ng pangarap natin matutupad lahat ng gusto natin matutupad mahal ko gagawin natin ang lahat para kay baby para sa future at para sa buhay na masaya kasama kita at si baby tutuparin ko ang pangako ko na pakakasalan at ihaharap kita sa altar mahal ko ipapangako ko na ang panata ko mahal ikaw lang ang mamahalin ko na hindi ako kakausap o subukan manlang na saktan ka mahal hindi lang sa emotionally kundi pati physically mahal ko hinding hindi ko kayo sasaktan kayo lang ang tangik nagpapasaya at nag bibigay ng lakas sakin mahal ko kaya maraming salamat mahal ko sa walang sawang pag unawa pag mamahal at pag aaruga pag papaalala at pag sasabi araw araw na mahal moko asawa ko, mahal na mahal na mahal na mahal na mahal na mahal kopo kayo mg sobra mahal ko ILOVEYOUSOMUCH, and HAPPY MONTHSARY my LOVE 🥰🥰🥰
+            </p>
+            <div class="floating-hearts">💜 ✨ 💜</div>
+        </div>
+
+        <!-- Layer 2: 20 Photos Showing 1 by 1 on Scroll -->
+        
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="1.jpg" alt="Memory 1">
+            <div class="photo-caption"> Your beautiful smile 💜</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="2.jpg" alt="Memory 2">
+            <div class="photo-caption"> Happy moments</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="3.jpg" alt="Memory 3">
+            <div class="photo-caption"> First memories</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="4.jpg" alt="Memory 4">
+            <div class="photo-caption"> Our cozy moments</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="5.jpg" alt="Memory 5">
+            <div class="photo-caption"> Sunshine in my life</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="6.jpg" alt="Memory 6">
+            <div class="photo-caption"> Unforgettable days</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="7.jpg" alt="Memory 7">
+            <div class="photo-caption"> Together Forever</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="8.jpg" alt="Memory 8">
+            <div class="photo-caption"> Precious times</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="9.jpg" alt="Memory 9">
+            <div class="photo-caption"> My queen</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="10.jpg" alt="Memory 10">
+            <div class="photo-caption"> Date with you</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="11.jpg" alt="Memory 11">
+            <div class="photo-caption"> Sweet dates</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="12.jpg" alt="Memory 12">
+            <div class="photo-caption"> Forever thankful</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="13.jpg" alt="Memory 13">
+            <div class="photo-caption"> Brightest star</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="14.jpg" alt="Memory 14">
+            <div class="photo-caption"> Pure joy</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="15.jpg" alt="Memory 15">
+            <div class="photo-caption"> Beautiful moments</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="16.jpg" alt="Memory 16">
+            <div class="photo-caption"> Our small family</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="17.jpg" alt="Memory 17">
+            <div class="photo-caption"> Cherished memories</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="18.jpg" alt="Memory 18">
+            <div class="photo-caption"> Love in full bloom</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="19.jpg" alt="Memory 19">
+            <div class="photo-caption"> Side by side</div>
+        </div>
+
+        <div class="single-photo-card" data-aos="fade-up">
+            <img src="20.jpg" alt="Memory 20">
+            <div class="photo-caption"> To many more monthsaries!</div>
+        </div>
+
+        <!-- Romantic Ending -->
+        <div class="section-box" data-aos="zoom-in">
+            <h2 class="script-font">Parang Musika... 🎶</h2>
+            <p>
+                <em>"Ikaw ang pipiliin ko..."</em><br>
+                Thank you for being the sweetest rhythm of my heartbeat. Forever yours. 💜
+            </p>
+        </div>
+
+    </div>
+
+    <!-- AOS Script Initialization -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 900,
+            once: false,
+            mirror: true
+        });
+
+        const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const questionScreen = document.getElementById('question-screen');
+        const envelopeScreen = document.getElementById('envelope-screen');
+        const cardScreen = document.getElementById('card-screen');
+        const bgMusic = document.getElementById('bg-music');
+        const envelopeWrapper = document.getElementById('envelope-wrapper');
+
+        // When "Yes" is clicked -> Go to Envelope Screen and play music
+        yesBtn.addEventListener('click', () => {
+            bgMusic.play().catch(error => console.log("Audio autoplay restricted by browser:", error));
+            questionScreen.style.display = 'none';
+            envelopeScreen.style.display = 'flex';
+        });
+
+        // When Envelope is tapped -> Trigger open animation, then switch to card screen
+        function openEnvelope() {
+            envelopeWrapper.classList.add('open');
+            setTimeout(() => {
+                envelopeScreen.style.display = 'none';
+                cardScreen.style.display = 'block';
+                AOS.refresh();
+            }, 800);
+        }
+
+        // Fun "No" button escape behavior
+        noBtn.addEventListener('mouseover', () => {
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${randomX}px`;
+            noBtn.style.top = `${randomY}px`;
+        });
+    </script>
+</body>
+</html>
